@@ -22,10 +22,17 @@ public class CollisionHandler {
 
 		int leftCol = (int)((x)/gamePanel.tileSize)+2;
 		int rightCol = (int)((x+width)/gamePanel.tileSize)+2;
-		//int topRow = (int)(y)/gamePanel.tileSize;
-		//int bottomRow = (int)(y+height)/gamePanel.tileSize;
 		int row = (int)(y+(height/2))/gamePanel.tileSize;
+
+		//leftCol = fixCol(leftCol);
+		//rightCol = fixCol(rightCol);
+		//row = fixRow(row);
+
+
 		TileInstance [][] tileGrid = gamePanel.tileManager.tileGrid;
+		if (isOutOfBounds(leftCol, row) || isOutOfBounds(rightCol, row)) {
+			return false;
+		}
 		if (tileGrid[row][rightCol] == null || !tileGrid[row][rightCol].collision) {
 			if (tileGrid[row][leftCol] == null || !tileGrid[row][leftCol].collision) {
 				return true;
@@ -34,72 +41,29 @@ public class CollisionHandler {
 		return false;
 	}
 
-
-	public void checkCollision(Entity entity) {
-		TileInstance[][] tileGrid = gamePanel.tileManager.tileGrid;
-		int tileSize = gamePanel.tileSize;
-		double x = entity.worldX;
-		double y = entity.worldY;
-		Rectangle2D.Float collisionBox = entity.hitBox;
-		boolean isGrounded = false;
-
-		int leftCol = (int) ((x + collisionBox.x)/tileSize)-5;
-		int rightCol = (int) ((x + collisionBox.x + collisionBox.width)/tileSize)-5;
-		int bottomRow = (int) ((y + collisionBox.y)/tileSize)-1;
-		int middleRow = (int) ((y + collisionBox.y - collisionBox.height/2)/tileSize)-1;
-		int topRow = (int) ((y + collisionBox.y - collisionBox.height)/tileSize)-1;
-		entity.collisionOn = false;
-		entity.collisionWall = false;
-		entity.onFloor = false;
-		if (tileGrid[bottomRow][leftCol] != null && tileGrid[bottomRow][leftCol].collision && entity.direction.equals("left")) {
-			entity.onFloor = true;
+	private boolean isOutOfBounds(int col, int row){
+		if (col > gamePanel.maxWorldCol-1 || col < 0) {
+			return true;
 		}
-		if (tileGrid[bottomRow][rightCol] != null && tileGrid[bottomRow][rightCol].collision && entity.direction.equals("right")) {
-			entity.onFloor = true;
-		}
-		if (tileGrid[topRow][leftCol] != null && tileGrid[topRow][leftCol].collision && entity.direction.equals("left")) {
-			entity.collisionWall = true;
-		}
-		if (tileGrid[middleRow][leftCol] != null && tileGrid[middleRow][leftCol].collision && entity.direction.equals("left")) {
-			entity.collisionOn = true;
-			entity.onFloor = false;
-			entity.collisionWall = true;
+		if (row > gamePanel.maxWorldRow-1 || row < 0) {
+			return true;
 		}
 
-		if (tileGrid[topRow][rightCol] != null && !tileGrid[topRow][rightCol].collision && entity.direction.equals("right")) {
-			entity.collisionOn = true;
-			entity.collisionWall = true;
-		}
-		if (tileGrid[middleRow][rightCol] != null && tileGrid[middleRow][rightCol].collision && entity.direction.equals("right")) {
-			entity.collisionOn = true;
-			entity.onFloor = false;
-			entity.collisionWall = true;
-		}
-
-
-
-
-
-		entity.isFalling = false;
-		if ((tileGrid[bottomRow][leftCol] == null || !tileGrid[bottomRow][leftCol].collision)) entity.isFalling = true;
-		else if (tileGrid[bottomRow][rightCol] == null || !tileGrid[bottomRow][rightCol].collision) entity.isFalling = true;
-		if (entity.onFloor && !entity.collisionWall) entity.collisionOn = false;
-
-		//for (int i = 0; i < 100; i++) {
-		//	System.out.println();
-		//}
-
-	//	System.out.println("topRow: "+topRow+ " middleRow: "+middleRow+" bottomRow: "+bottomRow);
-	//	System.out.println("leftCol: "+leftCol+ " rightCol: "+rightCol);
-	//	System.out.println("topLeft: "+tileGrid[topRow][leftCol]);
-	//	System.out.println("topRight: "+tileGrid[topRow][rightCol]);
-	//	System.out.println("middleLeft: "+tileGrid[middleRow][leftCol]);
-	//	System.out.println("middleRight: "+tileGrid[middleRow][rightCol]);
-	//	System.out.println("bottomLeft: "+tileGrid[bottomRow][leftCol]);
-	//	System.out.println("bottomRight: "+tileGrid[bottomRow][rightCol]);
-		//entity.collisionOn = false;
-
+		return false;
 	}
+	private int fixCol(int col){
+		if (col > gamePanel.maxWorldCol-1) col = gamePanel.maxWorldCol-1;
+		if (col < 0) col = 0;
+		return col;
+	}
+	private int fixRow(int row){
+		if (row > gamePanel.maxWorldRow-1) row = gamePanel.maxWorldRow-1;
+		if (row < 0) row = 0;
+		return row;
+	}
+
+
+
 }
 
 

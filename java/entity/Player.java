@@ -72,36 +72,11 @@ public class Player extends Entity{
 		}
 	}
 	public void update() {
-		if (keyHandler.leftPressed) {
-			direction = "left";
+		if (keyHandler.leftPressed || keyHandler.rightPressed) {
 			spriteCounter++;
 		}
-		else if (keyHandler.rightPressed) {
-			direction = "right";
-			spriteCounter++;
-		}
+
 		collisionOn = false;
-		//gamePanel.collisionHandler.checkCollision(this);
-		//System.out.println("Collision: "+collisionOn);
-		//System.out.println("Falling: "+isFalling);
-		// Player can move if collision is off
-
-		/*
-		if(collisionOn == false) {
-
-			if (direction.equals("left") && keyHandler.leftPressed) {
-				worldX -= speed;
-			} else if (direction.equals("right") && keyHandler.rightPressed) {
-				worldX += speed;
-			}
-		}
-		*/
-
-		//if (keyHandler.leftPressed && direction.equals("left") && gamePanel.collisionHandler.canMoveHere(worldX-speed,worldY, hitBox.width, hitBox.height)) {
-		//	worldX -= speed;
-		//} else if (keyHandler.rightPressed && direction.equals("right") && gamePanel.collisionHandler.canMoveHere(worldX+speed,worldY,hitBox.width,hitBox.height)) {
-		//	worldX += speed;
-		//}
 		updatePos();
 
 
@@ -111,9 +86,6 @@ public class Player extends Entity{
 			System.out.println("Jump!");
 			jump();
 		}
-		//if (isFalling) {
-		//	worldY++;
-		//}
 
 		if (spriteCounter > 10) {
 			spriteCounter = 0;
@@ -128,6 +100,10 @@ public class Player extends Entity{
 
 			int clickCol = ((clickX)/ gamePanel.tileSize)+3;
 			int clickRow = ((clickY)/ gamePanel.tileSize)+2;
+
+			clickCol = fixCol(clickCol);
+			clickRow = fixCol(clickRow);
+
 			System.out.println("x: "+clickCol+" y: "+clickRow);
 			System.out.println("Clicked Block: "+tileGrid[clickRow][clickCol]);
 
@@ -163,15 +139,23 @@ public class Player extends Entity{
 			jumping = false;
 			jumpCounter = 0;
 		}
-		if (keyHandler.leftPressed && !keyHandler.rightPressed)
+		if (keyHandler.leftPressed && !keyHandler.rightPressed) {
 			speedX = -speed;
-		else if (keyHandler.rightPressed && !keyHandler.leftPressed)
+			direction = "left";
+		}
+
+		else if (keyHandler.rightPressed && !keyHandler.leftPressed) {
 			speedX = speed;
+			direction = "right";
+		}
+
 		else {
-			if (-speedX == 4)
-				spriteNum = 1;
-			else if (speedX == 4)
-				spriteNum = 1;
+			speedX = 0;
+			spriteNum = 1;
+			//if (-speedX == 4)
+			//	spriteNum = 1;
+			//else if (speedX == 4)
+			//	spriteNum = 1;
 		}
 		isFalling = true;
 		if (!gamePanel.collisionHandler.canMoveHere(worldX, worldY+(hitBox.height), hitBox.width, hitBox.height)) {
@@ -262,6 +246,17 @@ public class Player extends Entity{
 		g2.setColor(Color.YELLOW);
 		g2.drawRect((int)hitBox.x, (int)(hitBox.y+height/2), gamePanel.tileSize, gamePanel.tileSize);
 
+	}
+
+	private int fixCol(int col){
+		if (col > gamePanel.maxWorldCol-1) col = gamePanel.maxWorldCol-1;
+		if (col < 0) col = 0;
+		return col;
+	}
+	private int fixRow(int row){
+		if (row > gamePanel.maxWorldRow) row = gamePanel.maxWorldRow;
+		if (row < 0) row = 0;
+		return row;
 	}
 
 
