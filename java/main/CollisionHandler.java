@@ -17,8 +17,13 @@ public class CollisionHandler {
 	public boolean canMoveHere(float x, float y, float width, float height) {
 		// x = worldX of target location
 		// y = worldY of target location
-		float centerX = x+width/2;
-		float centerY = y+height/2;
+
+		//width and height = hitbox of collision entity
+
+		//float centerX = x+entity.width/2;
+		//float centerY = y+height/2;
+
+
 
 		int leftCol = (int)((x)/gamePanel.tileSize)+2;
 		int rightCol = (int)((x+width)/gamePanel.tileSize)+2;

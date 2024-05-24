@@ -4,10 +4,13 @@ import entity.Player;
 import tile.TileManager;
 import tile.WallManager;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 
 public class GamePanel extends JPanel implements Runnable {
@@ -45,7 +48,7 @@ public class GamePanel extends JPanel implements Runnable {
 
 	public GamePanel() {
 		this.setPreferredSize(new Dimension(screenWidth, screenHeight));
-		this.setBackground(Color.getHSBColor(195,57,100));
+		this.setBackground(Color.BLACK);
 		this.setDoubleBuffered(true);
 		this.addKeyListener(keyHandler);
 		this.addMouseListener(mouseHandler);
@@ -103,11 +106,26 @@ public class GamePanel extends JPanel implements Runnable {
 		super.paintComponent(g);//uses JPanel's paintComponent
 
 		Graphics2D g2 = (Graphics2D) g;
+		BufferedImage background = null;
+
+		try {
+			background = ImageIO.read(getClass().getResourceAsStream("/backgrounds/background_sky.png"));
+		} catch(IOException e) {
+			e.printStackTrace();
+			System.out.println(background);
+		}
+		g2.drawImage(background, 0,0, screenWidth, screenHeight,null);
+
+
 		wallManager.draw(g2);
 		tileManager.draw(g2);
 		player.draw(g2);
 		g2.dispose();
 
+	}
+
+	public int getScale() {
+		return scale;
 	}
 
 

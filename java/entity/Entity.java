@@ -10,7 +10,7 @@ import java.awt.image.BufferedImage;
 public class Entity {
 	public float worldX, worldY; //positions in WORLD MAP
 	int height;
-	int width;
+	public int width;
 	public float speed;
 	public float speedX, speedY;
 	public float accelX, accelY;
@@ -31,6 +31,7 @@ public class Entity {
 	public boolean moving;
 	public int jumpCounter;
 	public boolean jumping;
+	public int jumpHeight;
 
 	public void initHitbox() {
 		hitBox = new Rectangle2D.Float(worldX, worldY, width, height);
@@ -52,9 +53,20 @@ public class Entity {
 
 	//Player class's jump can take in KeyHandler and determine height based on how long jump is held for
 	public void jump(){
-		if (!isFalling) {
-			jumpCounter = 0;
-			accelY = 10;
+		if (!jumping) {
+			if (!isFalling) {
+				jumping = true;
+				jumpCounter = jumpHeight;
+				accelY = jumpHeight;
+			}
+
+		} else {
+			jumpCounter--;
+			if (jumpCounter < 0) {
+				jumpCounter = 0;
+				jumping = false;
+			}
+
 		}
 	}
 

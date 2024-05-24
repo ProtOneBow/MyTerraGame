@@ -5,14 +5,14 @@ import item.ItemInstance;
 import javax.imageio.ImageIO;
 import java.io.IOException;
 
-public class Dirt extends ItemInstance {
+public class Wood extends ItemInstance {
 
 
-	public Dirt() {
-		width = 8;
-		height = 8;
+	public Wood() {
+		width = 12;
+		height = 11;
 		try {
-			image = ImageIO.read(getClass().getResourceAsStream("/items/dirt.png"));
+			image = ImageIO.read(getClass().getResourceAsStream("/items/wood.png"));
 
 		} catch (IOException e) {
 			e.printStackTrace();

@@ -49,9 +49,10 @@ public class Player extends Entity{
 		worldY = 1000;
 		width = 40;
 		height = 62;
-		speed = 4;
+		speed = 6.25f;
 		terminalVelocity = 20;
 		direction = "right";
+		jumpHeight = 20;
 
 
 
@@ -83,7 +84,7 @@ public class Player extends Entity{
 
 		if (onFloor && keyHandler.spacePressed) {
 			onFloor = false;
-			System.out.println("Jump!");
+			//System.out.println("Jump!");
 			jump();
 		}
 
@@ -125,84 +126,83 @@ public class Player extends Entity{
 
 	private void updatePos() {
 		moving = false;
-
-		//if (!keyHandler.leftPressed && !keyHandler.rightPressed) {
-		//	return;
-		//}
-		//float xSpeed = 0, ySpeed = 0;
-		if (jumpCounter == 0 && keyHandler.spacePressed && !isFalling) {
-			jumping = true;
-			accelY = 10;
-		}
-		if (jumping) jumpCounter++;
-		if (jumpCounter > 10) {
-			jumping = false;
-			jumpCounter = 0;
-		}
+		jump();
 		if (keyHandler.leftPressed && !keyHandler.rightPressed) {
 			speedX = -speed;
 			direction = "left";
 		}
-
 		else if (keyHandler.rightPressed && !keyHandler.leftPressed) {
 			speedX = speed;
 			direction = "right";
 		}
-
 		else {
 			speedX = 0;
 			spriteNum = 1;
-			//if (-speedX == 4)
-			//	spriteNum = 1;
-			//else if (speedX == 4)
-			//	spriteNum = 1;
 		}
 		isFalling = true;
-		if (!gamePanel.collisionHandler.canMoveHere(worldX, worldY+(hitBox.height), hitBox.width, hitBox.height)) {
+		if (!gamePanel.collisionHandler.canMoveHere(worldX, worldY+ hitBox.height, hitBox.width, hitBox.height+2)) {
 			isFalling = false;
 		}
-
 		if (isFalling)
-			speedY += 9.81/ gamePanel.tileSize;
+			speedY += 9.81/gamePanel.tileSize*4;
 		else
 			speedY = 0;
-
 		speedY -= accelY;
-		accelY/=10;
-		if (!keyHandler.spacePressed) {
-			accelY /= 10;
-		}
-
+		accelY=0;
+		jump();
 		if (speedY > terminalVelocity) {
 			speedY = terminalVelocity;
 		}
-
-		//System.out.println(speedX);
-
-		boolean topCollision = !gamePanel.collisionHandler.canMoveHere(worldX+speedX, worldY, hitBox.width, hitBox.height);
-		boolean middleCollision = !gamePanel.collisionHandler.canMoveHere(worldX+speedX, worldY+ gamePanel.tileSize, hitBox.width, hitBox.height);
-		boolean bottomCollision = !gamePanel.collisionHandler.canMoveHere(worldX+speedX, worldY+ (gamePanel.tileSize*2), hitBox.width, hitBox.height);
 		worldY += speedY;
+		boolean topCollision = !gamePanel.collisionHandler.canMoveHere(worldX+speedX, worldY, hitBox.width, hitBox.height);
+		boolean middleCollision = !gamePanel.collisionHandler.canMoveHere(worldX+speedX, worldY+gamePanel.tileSize, hitBox.width, hitBox.height);
+		boolean bottomCollision = !gamePanel.collisionHandler.canMoveHere(worldX+speedX, worldY+gamePanel.tileSize*2, hitBox.width, hitBox.height);
+
 		if ((!topCollision && !bottomCollision) && !middleCollision) {
 			if (!keyHandler.leftPressed && !keyHandler.rightPressed) {
 				return;
 			}
 			worldX += speedX;
-
 			moving = true;
 		} else {
 			speedX = 0;
-			if (bottomCollision && !middleCollision && !topCollision && gamePanel.collisionHandler.canMoveHere(worldX+speedX, worldY-speedY, hitBox.width, hitBox.height)) {
-				System.out.println("Attempt block stepup");
-
+			if (bottomCollision && !middleCollision && !topCollision && gamePanel.collisionHandler.canMoveHere(worldX+speedX, worldY+speedY- gamePanel.tileSize, hitBox.width, hitBox.height)) {
 				worldY-= gamePanel.tileSize/4f;
 			}
+		}
+		if (topCollision && !middleCollision) {
+			speedY = 5;
 		}
 		//System.out.println(topCollision+" "+middleCollision+" "+bottomCollision);
 
 
 
 	}
+
+	public void jump() {
+
+		if (!jumping) {
+			if (keyHandler.spacePressed && !isFalling) {
+				jumping = true;
+				jumpCounter = jumpHeight;
+				accelY = jumpHeight;
+			}
+
+		} else {
+			System.out.println("jumpCounter "+jumpCounter+" accelY "+accelY);
+			jumpCounter--;
+			if (jumpCounter < 0) {
+				jumpCounter = 0;
+				jumping = false;
+
+			} else if (!keyHandler.spacePressed) {
+				accelY=-1;
+			}
+
+		}
+
+	}
+
 	public void draw(Graphics2D g2) {
 		BufferedImage image = null;
 		if (direction.equals("left")) {

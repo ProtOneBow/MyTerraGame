@@ -93,8 +93,8 @@ public class TileManager {
 	//}
 	public void draw(Graphics2D g2){
 		loadedTiles = 0;
-		for (int row = 0; row < tileGrid.length; row++) {
-			for (int col = 0; col < tileGrid[row].length; col++) {
+		for (int row = 0; row < gamePanel.maxWorldRow-1; row++) {
+			for (int col = 0; col < gamePanel.maxWorldCol-1; col++) {
 				if (tileGrid[row][col] != null && tileGrid[row][col].image != null) {
 					tileGrid[row][col].draw(g2, gamePanel,col,row);
 					if (tileGrid[row][col].isOnScreen(gamePanel,col,row)) {
@@ -118,7 +118,7 @@ public class TileManager {
 //
 		//	}
 		//}
-		System.out.println(loadedTiles+" loaded tiles");
+		//System.out.println(loadedTiles+" loaded tiles");
 
 	}
 

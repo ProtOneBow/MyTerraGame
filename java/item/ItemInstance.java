@@ -1,8 +1,11 @@
 package item;
 
+import main.GamePanel;
+
 public class ItemInstance extends Item {
 
-	public ItemInstance() {
+	GamePanel gamePanel;
 
-	}
+
+
 }

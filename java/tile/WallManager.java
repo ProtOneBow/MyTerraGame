@@ -104,7 +104,7 @@ public class WallManager {
 //
 		//	}
 		//}
-		System.out.println(loadedWalls+" loaded walls");
+		//System.out.println(loadedWalls+" loaded walls");
 
 	}
 

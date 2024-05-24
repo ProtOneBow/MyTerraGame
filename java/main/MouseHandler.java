@@ -10,14 +10,14 @@ public class MouseHandler implements MouseListener {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		mouseClick = true;
-		mouseX = e.getX();
-		mouseY = e.getY();
+
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-
+		mouseClick = true;
+		mouseX = e.getX();
+		mouseY = e.getY();
 	}
 
 	@Override
